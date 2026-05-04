@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AXIOM AI — Intelligence Layers. Revenue Autonomy.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&family=Barlow+Condensed:wght@300;400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;
+  --ink:#04050c;
+  --ink2:#080b14;
+  --ink3:#0c0f1c;
+  --ink4:#111526;
+  --ink5:#161b30;
+  --glass:rgba(255,255,255,0.03);
+  --glass2:rgba(255,255,255,0.055);
+  --edge:rgba(255,255,255,0.07);
+  --edge2:rgba(255,255,255,0.13);
+  --w:#ffffff;
+  --w90:rgba(255,255,255,0.90);
+  --w70:rgba(255,255,255,0.70);
+  --w50:rgba(255,255,255,0.50);
+  --w30:rgba(255,255,255,0.30);
+  --w15:rgba(255,255,255,0.15);
+  --w08:rgba(255,255,255,0.08);
+  --cyan:#00d4ff;
+  --cyan2:#40e0ff;
+  --cg:rgba(0,212,255,0.18);
+  --cm:rgba(0,212,255,0.08);
+  --purple:#8b5cf6;
+  --purple2:#a78bfa;
+  --pg:rgba(139,92,246,0.18);
+  --pm:rgba(139,92,246,0.07);
+  --silver:#c8cfe0;
+  --green:#00e5aa;
+  --red:#ff3a5c;
+  --amber:#ffb020;
+  --fd:'Bebas Neue',sans-serif;
+  --fc:'Barlow Condensed',sans-serif;
+  --fb:'Barlow',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);
+  color:var(--w70);
+  font-family:var(--fb);
+  font-weight:300;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  cursor:none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════════════════════════════ */
+#cur{position:fixed;width:7px;height:7px;border-radius:50%;background:var(--cyan);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:transform .12s,width .2s,height .2s}
+#cur-o{position:fixed;width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,212,255,0.35);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease,top .1s ease,width .2s,height .2s,border-color .2s}
+
+/* ═══════════════════════════════════════════════════════════════
+   CANVAS STARFIELD
+═══════════════════════════════════════════════════════════════ */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+
+/* ═══════════════════════════════════════════════════════════════
+   AMBIENT
+═══════════════════════════════════════════════════════════════ */
+.amb{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.amb span{position:absolute;border-radius:50%}
+.amb .a1{width:900px;height:900px;top:-20%;left:-15%;background:radial-gradient(circle,rgba(139,92,246,0.07) 0%,transparent 65%);animation:ambd 20s ease-in-out infinite}
+.amb .a2{width:700px;height:700px;top:5%;right:-10%;background:radial-gradient(circle,rgba(0,212,255,0.06) 0%,transparent 60%);animation:ambd 25s ease-in-out infinite reverse}
+.amb .a3{width:600px;height:600px;top:60%;left:30%;background:radial-gradient(circle,rgba(139,92,246,0.05) 0%,transparent 60%);animation:ambd 18s ease-in-out infinite 3s}
+.amb .a4{width:500px;height:500px;bottom:-10%;right:20%;background:radial-gradient(circle,rgba(0,212,255,0.04) 0%,transparent 60%);animation:ambd 22s ease-in-out infinite reverse 5s}
+@keyframes ambd{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,20px) scale(1.05)}66%{transform:translate(-20px,40px) scale(.97)}}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE WRAPPER
+═══════════════════════════════════════════════════════════════ */
+.page{position:relative;z-index:2}
+.wrap{max-width:1180px;margin:0 auto;padding:0 44px}
+.wrap-sm{max-width:860px;margin:0 auto;padding:0 44px}
+.wrap-xs{max-width:700px;margin:0 auto;padding:0 44px}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGO SVG
+═══════════════════════════════════════════════════════════════ */
+.axiom-logo{display:flex;align-items:center;gap:14px}
+.axiom-logo svg{flex-shrink:0}
+.axiom-wordmark{display:flex;flex-direction:column;gap:2px}
+.axiom-wordmark .wm-name{font-family:var(--fc);font-size:22px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--w);line-height:1}
+.axiom-wordmark .wm-tag{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--w30)}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:18px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(32px) saturate(150%);
+  background:rgba(0,0,0,0.72);
+  transition:padding .4s
+}
+.nav-i{display:flex;align-items:center;justify-content:space-between}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-link{font-family:var(--fc);font-size:14px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--w50);cursor:none;transition:.2s}
+.nav-link:hover{color:var(--w90)}
+.nav-cta{
+  padding:9px 22px;border-radius:7px;
+  font-family:var(--fc);font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--cyan);background:rgba(0,212,255,0.08);color:var(--cyan);
+  cursor:none;transition:.25s
+}
+.nav-cta:hover{background:rgba(0,212,255,0.15);box-shadow:0 0 28px rgba(0,212,255,0.15)}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════════ */
+.hero{
+  min-height:100vh;display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;align-items:center;
+  padding:130px 0 90px;
+  position:relative;overflow:hidden
+}
+/* grid lines bg */
+.hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 100px)
+}
+.hero-left{padding-right:40px}
+.hero-intro-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px 6px 10px;
+  border:1px solid rgba(0,212,255,0.2);background:rgba(0,212,255,0.05);
+  border-radius:999px;
+  font-family:var(--fm);font-size:10px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:28px;
+  opacity:0;animation:fu .8s .1s forwards
+}
+.live-pip{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pip 2s infinite}
+@keyframes pip{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-h{
+  font-family:var(--fd);
+  font-size:clamp(50px,6.5vw,82px);
+  line-height:.95;letter-spacing:.015em;text-transform:uppercase;
+  color:var(--w);margin-bottom:24px;
+  opacity:0;animation:fu .9s .25s forwards
+}
+.hero-h .hl{
+  background:linear-gradient(90deg,var(--cyan),#7dd3fc,var(--purple2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block
+}
+.hero-sub{
+  font-size:19px;font-weight:300;color:var(--w70);
+  line-height:1.75;margin-bottom:16px;
+  opacity:0;animation:fu .9s .4s forwards
+}
+.hero-hook{
+  font-family:var(--fc);font-size:16px;font-weight:600;letter-spacing:.06em;
+  color:var(--w50);text-transform:uppercase;margin-bottom:36px;
+  opacity:0;animation:fu .9s .5s forwards
+}
+.hero-hook span{color:var(--cyan)}
+.hero-ctas{
+  display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:fu .9s .65s forwards
+}
+.btn-p{
+  padding:15px 32px;border-radius:9px;
+  font-family:var(--fc);font-size:16px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--cyan);
+  background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(139,92,246,0.15));
+  color:#fff;cursor:none;transition:.3s;
+  box-shadow:0 0 0 1px rgba(0,212,255,0.1),0 8px 40px rgba(0,212,255,0.15),inset 0 1px 0 rgba(255,255,255,0.07)
+}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(0,212,255,0.22),0 16px 56px rgba(0,212,255,0.25)}
+.btn-g{
+  padding:15px 32px;border-radius:9px;
+  font-family:var(--fc);font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);
+  color:var(--w50);cursor:none;transition:.25s
+}
+.btn-g:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:var(--w90)}
+
+/* HERO RIGHT — ENGINE VISUAL */
+.hero-right{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  opacity:0;animation:fu 1.2s .5s forwards
+}
+.engine-visual{
+  position:relative;width:460px;height:460px;
+  display:flex;align-items:center;justify-content:center
+}
+/* outer glow rings */
+.ev-ring{
+  position:absolute;border-radius:50%;border:1px solid;
+  animation:spin linear infinite
+}
+.ev-ring:nth-child(1){width:100%;height:100%;border-color:rgba(139,92,246,0.12);animation-duration:40s}
+.ev-ring:nth-child(2){width:82%;height:82%;border-color:rgba(0,212,255,0.1);animation-duration:28s;animation-direction:reverse}
+.ev-ring:nth-child(3){width:64%;height:64%;border-color:rgba(139,92,246,0.15);animation-duration:18s}
+.ev-ring:nth-child(4){width:46%;height:46%;border-color:rgba(0,212,255,0.2);animation-duration:12s;animation-direction:reverse}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* ring nodes */
+.ev-node{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  box-shadow:0 0 12px currentColor
+}
+/* center core */
+.ev-core{
+  position:relative;z-index:10;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.35) 0%,rgba(0,212,255,0.15) 50%,transparent 75%);
+  border:1px solid rgba(139,92,246,0.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 60px rgba(139,92,246,0.25),0 0 120px rgba(0,212,255,0.1);
+  animation:core-pulse 4s ease-in-out infinite
+}
+@keyframes core-pulse{0%,100%{box-shadow:0 0 60px rgba(139,92,246,0.25),0 0 120px rgba(0,212,255,0.1)}50%{box-shadow:0 0 80px rgba(139,92,246,0.4),0 0 160px rgba(0,212,255,0.15)}}
+.ev-core-text{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(139,92,246,0.8);text-align:center;line-height:1.4}
+/* floating labels */
+.ev-label{
+  position:absolute;
+  font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--w30);white-space:nowrap;
+  display:flex;align-items:center;gap:6px
+}
+.ev-label::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);flex-shrink:0}
+/* data stream lines on canvas */
+.ev-canvas{position:absolute;inset:0;pointer-events:none}
+
+/* HERO STAT STRIP */
+.hero-stats{
+  grid-column:1/-1;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+  overflow:hidden;margin-top:60px;
+  opacity:0;animation:fu .9s .9s forwards
+}
+.hs{
+  padding:22px 28px;background:var(--ink2);
+  position:relative;transition:.3s
+}
+.hs::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:.3s}
+.hs:hover::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.hs:hover{background:var(--ink3)}
+.hs-n{
+  font-family:var(--fd);font-size:42px;letter-spacing:.02em;
+  color:var(--cyan);text-shadow:0 0 30px rgba(0,212,255,0.35);
+  line-height:1
+}
+.hs-l{font-size:13px;font-weight:300;color:var(--w50);margin-top:6px;line-height:1.4}
+
+/* SCROLL INDICATOR */
+.scroll-cue{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--w30);
+  opacity:0;animation:fu .8s 1.4s forwards
+}
+.sc-line{width:1px;height:44px;background:linear-gradient(180deg,transparent,var(--cyan),transparent);animation:scl 2.2s ease-in-out infinite}
+@keyframes scl{0%,100%{opacity:.2}50%{opacity:.8}}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION FOUNDATIONS
+═══════════════════════════════════════════════════════════════ */
+.sec{padding:96px 0;position:relative}
+.sec-alt{background:var(--ink2)}
+.sec-deep{background:var(--ink3)}
+.sec-label{
+  font-family:var(--fm);font-size:10px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:14px
+}
+.sec-label.purple{color:var(--purple2)}
+h2{
+  font-family:var(--fd);font-size:clamp(44px,5.5vw,76px);
+  line-height:.94;letter-spacing:.02em;text-transform:uppercase;
+  color:var(--w);margin-bottom:20px
+}
+h2 .hl{background:linear-gradient(90deg,var(--cyan),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h2 .hlp{background:linear-gradient(90deg,var(--purple2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.body-l{font-size:18px;font-weight:300;color:var(--w70);line-height:1.8;max-width:680px}
+.body-m{font-size:16px;font-weight:300;color:var(--w60);line-height:1.8}
+.thread{width:1px;height:72px;background:linear-gradient(180deg,rgba(0,212,255,0.4),transparent);margin:0 auto;display:block}
+
+/* REVEAL ANIMATIONS */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.on{opacity:1;transform:none}
+.rvl{opacity:0;transform:translateX(-30px);transition:opacity .7s .1s cubic-bezier(.16,1,.3,1),transform .7s .1s cubic-bezier(.16,1,.3,1)}
+.rvl.on{opacity:1;transform:none}
+.rvr{opacity:0;transform:translateX(30px);transition:opacity .7s .1s cubic-bezier(.16,1,.3,1),transform .7s .1s cubic-bezier(.16,1,.3,1)}
+.rvr.on{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROBLEM SECTION
+═══════════════════════════════════════════════════════════════ */
+.problem-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);border-radius:20px;
+  overflow:hidden;margin-top:52px
+}
+.ps-half{padding:44px 42px;background:var(--ink2);position:relative;overflow:hidden}
+.ps-half::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ps-half.bad::after{background:linear-gradient(90deg,transparent,rgba(255,58,92,0.6),transparent)}
+.ps-half.good::after{background:linear-gradient(90deg,transparent,rgba(0,212,255,0.6),transparent)}
+.ps-tag{display:inline-block;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:999px;margin-bottom:16px}
+.t-bad{background:rgba(255,58,92,0.1);color:#ff7a8e;border:1px solid rgba(255,58,92,0.2)}
+.t-good{background:rgba(0,212,255,0.08);color:var(--cyan);border:1px solid rgba(0,212,255,0.18)}
+.ps-half h3{font-family:var(--fd);font-size:34px;text-transform:uppercase;letter-spacing:.02em;color:var(--w);margin-bottom:14px;line-height:1}
+.ps-half .body-m{margin-bottom:24px}
+.leak-list{display:grid;gap:9px}
+.li{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:10px;font-size:14px;line-height:1.6}
+.li-bad{background:rgba(255,58,92,0.04);border:1px solid rgba(255,58,92,0.1);color:var(--w60)}
+.li-good{background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.1);color:var(--w60)}
+.ld{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.ld.r{background:var(--red);box-shadow:0 0 6px var(--red)}
+.ld.c{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+
+/* ═══════════════════════════════════════════════════════════════
+   TENSION / SHIFT — CINEMATIC TEXT
+═══════════════════════════════════════════════════════════════ */
+.tension-block{
+  max-width:900px;margin:0 auto;text-align:center;padding:80px 0
+}
+.t-divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--purple2),transparent);margin:36px auto}
+.tension-quote{
+  font-family:var(--fd);
+  font-size:clamp(30px,4.5vw,58px);
+  line-height:.97;letter-spacing:.02em;text-transform:uppercase;
+  color:var(--w);position:relative;padding:0 28px
+}
+.tension-quote::before,.tension-quote::after{
+  content:'';position:absolute;
+  width:3px;height:100%;top:0;
+  background:linear-gradient(180deg,var(--purple),var(--cyan))
+}
+.tension-quote::before{left:0;border-radius:2px 0 0 2px}
+.tension-quote::after{right:0;border-radius:0 2px 2px 0}
+.tension-prose{font-size:17px;font-weight:300;color:var(--w50);line-height:1.85;max-width:720px;margin:28px auto 0}
+/* staggered fade paragraphs */
+.tension-prose p{margin-bottom:16px}
+.tension-prose p:last-child{margin:0}
+.tension-prose .emphasis{color:var(--cyan);font-weight:400}
+
+/* PRODUCT INTRO */
+.product-intro-wrap{
+  display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:start
+}
+.pi-tag{display:inline-block;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:999px;margin-bottom:20px;background:rgba(139,92,246,0.1);color:var(--purple2);border:1px solid rgba(139,92,246,0.22)}
+.product-not-list{display:grid;gap:8px;margin:24px 0}
+.pnl-item{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--fc);font-size:14px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--w30);padding:11px 16px;border-radius:9px;
+  border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)
+}
+.pnl-item::before{content:'✕';color:rgba(255,58,92,0.5);font-size:12px;flex-shrink:0}
+.product-is{
+  margin-top:20px;padding:24px;border-radius:12px;
+  border:1px solid rgba(0,212,255,0.15);
+  background:linear-gradient(135deg,rgba(0,212,255,0.04),rgba(139,92,246,0.03));
+  position:relative;overflow:hidden
+}
+.product-is::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent)}
+.pi-strong{font-family:var(--fc);font-size:16px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--w90);margin-bottom:8px}
+.pi-body{font-size:14px;font-weight:300;color:var(--w60);line-height:1.75}
+/* right side — UI mockup */
+.ui-mockup{
+  border:1px solid rgba(0,212,255,0.12);border-radius:20px;
+  overflow:hidden;background:var(--ink3);
+  box-shadow:0 0 0 1px rgba(0,212,255,0.05),0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(0,212,255,0.04)
+}
+.ui-bar{
+  padding:13px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;gap:9px
+}
+.ui-dot{width:9px;height:9px;border-radius:50%}
+.ui-title{font-family:var(--fm);font-size:11px;letter-spacing:.07em;color:var(--w30);margin-left:4px}
+.ui-body{padding:20px}
+.ui-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.ui-kpi{padding:14px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.uk-l{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--w30);margin-bottom:6px}
+.uk-v{font-family:var(--fd);font-size:28px;letter-spacing:.02em;line-height:1}
+.uk-v.c{color:var(--cyan);text-shadow:0 0 20px rgba(0,212,255,0.35)}
+.uk-v.g{color:var(--green);text-shadow:0 0 20px rgba(0,229,170,0.3)}
+.uk-v.p{color:var(--purple2);text-shadow:0 0 20px rgba(167,139,250,0.3)}
+.ui-chart{border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.015);padding:14px;margin-bottom:14px}
+.ui-ch{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--w30);margin-bottom:12px}
+.wf-rows{display:grid;gap:7px}
+.wfr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.015);transition:.2s}
+.wfr:hover{border-color:rgba(0,212,255,0.15);background:rgba(0,212,255,0.03)}
+.wfr-l{display:flex;align-items:center;gap:10px}
+.wfr-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.wfr-name{font-size:12px;font-weight:500;color:var(--w70)}
+.wfr-sub{font-size:10px;color:var(--w30);margin-top:1px}
+.badge{padding:3px 9px;border-radius:999px;font-family:var(--fm);font-size:9px;font-weight:400;letter-spacing:.07em;text-transform:uppercase}
+.bc{background:rgba(0,212,255,0.08);color:var(--cyan);border:1px solid rgba(0,212,255,0.18)}
+.br{background:rgba(255,58,92,0.08);color:#ff7a8e;border:1px solid rgba(255,58,92,0.18)}
+.bg{background:rgba(0,229,170,0.08);color:var(--green);border:1px solid rgba(0,229,170,0.18)}
+.ba{background:rgba(255,176,32,0.08);color:var(--amber);border:1px solid rgba(255,176,32,0.18)}
+.bp{background:rgba(167,139,250,0.08);color:var(--purple2);border:1px solid rgba(167,139,250,0.18)}
+
+/* ═══════════════════════════════════════════════════════════════
+   ORACLE SECTION
+═══════════════════════════════════════════════════════════════ */
+.oracle-sec{
+  padding:120px 0;background:var(--ink2);
+  position:relative;overflow:hidden
+}
+.oracle-sec::before{
+  content:'ORACLE';
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--fd);font-size:32vw;letter-spacing:.05em;
+  color:rgba(139,92,246,0.02);pointer-events:none;white-space:nowrap;line-height:1
+}
+.oracle-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.oracle-title{font-family:var(--fd);font-size:clamp(52px,7vw,96px);line-height:.9;letter-spacing:.02em;text-transform:uppercase;color:var(--w);margin-bottom:24px}
+.oracle-title .hlp{background:linear-gradient(135deg,var(--purple2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.oracle-powers{display:grid;gap:12px;margin-top:32px}
+.op{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:17px 20px;border-radius:12px;
+  border:1px solid rgba(139,92,246,0.1);background:rgba(139,92,246,0.03);
+  transition:.3s
+}
+.op:hover{border-color:rgba(139,92,246,0.25);background:rgba(139,92,246,0.07);transform:translateX(4px)}
+.op-n{font-family:var(--fm);font-size:10px;color:rgba(139,92,246,0.5);letter-spacing:.1em;flex-shrink:0;margin-top:1px}
+.op-t{font-size:14px;font-weight:300;color:var(--w60);line-height:1.65}
+.op-t strong{color:var(--w80);font-weight:500}
+
+/* ORACLE DIAGRAM */
+.oracle-diagram{
+  padding:36px;border-radius:24px;
+  border:1px solid rgba(139,92,246,0.2);
+  background:linear-gradient(160deg,rgba(139,92,246,0.06),rgba(0,212,255,0.03));
+  position:relative;overflow:hidden
+}
+.oracle-diagram::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.6),rgba(0,212,255,0.4),transparent)
+}
+.od-label{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(139,92,246,0.5);margin-bottom:24px}
+/* orbit system */
+.od-orbit{position:relative;width:240px;height:240px;margin:0 auto 28px}
+.od-ring{position:absolute;border-radius:50%;border:1px solid;animation:spin linear infinite}
+.od-ring:nth-child(1){inset:0;border-color:rgba(139,92,246,0.15);animation-duration:20s}
+.od-ring:nth-child(2){inset:30px;border-color:rgba(0,212,255,0.12);animation-duration:14s;animation-direction:reverse}
+.od-ring:nth-child(3){inset:60px;border-color:rgba(139,92,246,0.18);animation-duration:9s}
+.od-core{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:70px;height:70px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.4),rgba(0,212,255,0.15),transparent 75%);
+  border:1px solid rgba(139,92,246,0.4);
+  display:flex;align-items:center;justify-content:center;
+  animation:core-pulse 3s ease-in-out infinite;z-index:5
+}
+.od-core-inner{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(139,92,246,0.8);text-align:center;line-height:1.3}
+.od-node{
+  position:absolute;width:10px;height:10px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 14px var(--cyan);
+  transform:translate(-50%,-50%);z-index:4
+}
+.od-node.purple{background:var(--purple2);box-shadow:0 0 14px var(--purple2)}
+.od-node-label{
+  position:absolute;font-family:var(--fm);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--w40);white-space:nowrap;z-index:4
+}
+.od-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.od-stat{padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);text-align:center}
+.od-stat-n{font-family:var(--fd);font-size:30px;color:var(--purple2);text-shadow:0 0 20px rgba(139,92,246,0.4);line-height:1}
+.od-stat-l{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--w30);margin-top:4px}
+.od-latest{
+  margin-top:16px;padding:14px 16px;border-radius:10px;
+  border:1px solid rgba(139,92,246,0.15);background:rgba(139,92,246,0.04)
+}
+.od-lt-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(139,92,246,0.5);margin-bottom:6px}
+.od-lt-text{font-size:13px;font-weight:300;color:var(--w60);line-height:1.55}
+
+/* ═══════════════════════════════════════════════════════════════
+   OPERATOR LOOP
+═══════════════════════════════════════════════════════════════ */
+.loop-wrap{
+  display:flex;gap:0;
+  border:1px solid rgba(255,255,255,0.07);border-radius:20px;
+  overflow:hidden;margin-top:52px;background:var(--ink2)
+}
+.ls{
+  flex:1;padding:36px 26px;border-right:1px solid rgba(255,255,255,0.06);
+  position:relative;transition:.3s;overflow:hidden
+}
+.ls:last-child{border-right:none}
+.ls::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:.3s}
+.ls:hover::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.ls:hover{background:var(--ink3)}
+.ls-n{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+.ls-t{font-family:var(--fd);font-size:28px;text-transform:uppercase;letter-spacing:.02em;color:var(--w);margin-bottom:12px}
+.ls-p{font-size:13px;font-weight:300;color:var(--w35);line-height:1.7}
+/* connecting arrows */
+.ls-arrow{
+  position:absolute;right:-1px;top:50%;transform:translateY(-50%);
+  width:0;height:0;
+  border-top:8px solid transparent;border-bottom:8px solid transparent;
+  border-left:8px solid rgba(0,212,255,0.2);
+  z-index:2
+}
+.ls:last-child .ls-arrow{display:none}
+
+/* ═══════════════════════════════════════════════════════════════
+   CAPABILITY TILES
+═══════════════════════════════════════════════════════════════ */
+.tiles-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;margin-top:52px
+}
+.tile{
+  padding:28px;border-radius:16px;
+  border:1px solid rgba(255,255,255,0.07);
+  background:var(--ink2);
+  position:relative;overflow:hidden;transition:.3s
+}
+.tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.1),transparent);transition:.3s}
+.tile:hover{border-color:rgba(0,212,255,0.2);background:var(--ink3);transform:translateY(-3px)}
+.tile:hover::before{background:linear-gradient(90deg,transparent,rgba(0,212,255,0.3),transparent)}
+.tile-icon{font-size:22px;margin-bottom:16px;display:block}
+.tile-t{font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--w);margin-bottom:10px}
+.tile-b{font-size:14px;font-weight:300;color:var(--w50);line-height:1.7}
+.tile-status{display:inline-block;margin-top:14px;font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.tile-status::before{content:'● ';font-size:7px}
+/* wide tile */
+.tile.wide{grid-column:span 2}
+.tile.wide .tile-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+.twn{padding:14px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.015)}
+.twn-l{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(139,92,246,0.5);margin-bottom:5px}
+.twn-t{font-size:13px;font-weight:300;color:var(--w60)}
+
+/* ═══════════════════════════════════════════════════════════════
+   VISION / FUTURE SECTION
+═══════════════════════════════════════════════════════════════ */
+.vision-sec{
+  padding:120px 0;text-align:center;position:relative;overflow:hidden
+}
+.vision-sec::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% -10%,rgba(0,212,255,0.06),transparent 55%),
+    radial-gradient(ellipse 40% 50% at 15% 60%,rgba(139,92,246,0.05),transparent 50%),
+    radial-gradient(ellipse 35% 40% at 85% 30%,rgba(0,212,255,0.04),transparent 50%)
+}
+.vis-content{max-width:940px;margin:0 auto;position:relative;z-index:1}
+.vis-line{width:1px;height:90px;background:linear-gradient(180deg,transparent,rgba(139,92,246,0.4),rgba(0,212,255,0.2),transparent);margin:0 auto 56px}
+.vis-three{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+  overflow:hidden;margin:56px 0
+}
+.vt{padding:28px 24px;background:var(--ink2);text-align:left;position:relative}
+.vt::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.12),transparent)}
+.vt-from{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,58,92,0.5);margin-bottom:10px}
+.vt-to{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.vt-t{font-family:var(--fc);font-size:16px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--w80);margin-bottom:4px}
+.vt-sub{font-size:13px;font-weight:300;color:var(--w35);line-height:1.6}
+.vis-big{
+  font-family:var(--fd);font-size:clamp(32px,5vw,66px);
+  line-height:.96;letter-spacing:.02em;text-transform:uppercase;
+  color:var(--w);margin-bottom:24px
+}
+.vis-big .hl{background:linear-gradient(90deg,var(--cyan),#7dd3fc,var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROOF / LIVE PROTOTYPE
+═══════════════════════════════════════════════════════════════ */
+.proof-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:52px;align-items:center}
+.proof-bullets{display:grid;gap:10px;margin-top:32px}
+.pb{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:15px 18px;border-radius:11px;
+  border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);
+  font-size:14px;font-weight:300;color:var(--w70);line-height:1.6;transition:.2s
+}
+.pb:hover{border-color:rgba(0,212,255,0.15);background:rgba(0,212,255,0.02)}
+.pb-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);flex-shrink:0;margin-top:8px}
+/* screenshot panel */
+.screenshot-panel{
+  border:1px solid rgba(0,212,255,0.12);border-radius:20px;overflow:hidden;
+  background:var(--ink3);
+  box-shadow:0 0 0 1px rgba(0,212,255,0.05),0 40px 100px rgba(0,0,0,0.5),0 0 80px rgba(0,212,255,0.04)
+}
+.sp-bar{padding:12px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px}
+.sp-body{padding:20px}
+.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.hg-card{padding:16px 18px;border-radius:11px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:.2s}
+.hg-card:hover{border-color:rgba(0,212,255,0.15);background:rgba(0,212,255,0.02)}
+.hg-l{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--w30);margin-bottom:7px}
+.hg-v{font-family:var(--fd);font-size:34px;letter-spacing:.02em;line-height:1}
+.hg-sub{font-size:11px;color:var(--w30);margin-top:5px}
+.health-bars{display:grid;gap:9px;margin-bottom:14px}
+.hb{display:grid;gap:5px}
+.hb-top{display:flex;justify-content:space-between;align-items:center}
+.hb-name{font-size:11px;color:var(--w40);font-family:var(--fm)}
+.hb-val{font-family:var(--fd);font-size:16px;letter-spacing:.02em}
+.hb-track{height:2px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.hb-fill{height:100%;border-radius:99px;transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+
+/* ═══════════════════════════════════════════════════════════════
+   WHO IT'S FOR — STAT SECTION
+═══════════════════════════════════════════════════════════════ */
+.stats-four{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);border-radius:18px;
+  overflow:hidden;margin-top:52px
+}
+.sf{
+  padding:32px 28px;background:var(--ink2);text-align:center;
+  position:relative;transition:.3s
+}
+.sf::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.1),transparent)}
+.sf:hover{background:var(--ink3)}
+.sf-n{font-family:var(--fd);font-size:52px;letter-spacing:.01em;color:var(--cyan);text-shadow:0 0 36px rgba(0,212,255,0.3);line-height:1}
+.sf-l{font-size:13px;font-weight:300;color:var(--w40);margin-top:8px;line-height:1.5}
+
+/* ═══════════════════════════════════════════════════════════════
+   FINAL CTA
+═══════════════════════════════════════════════════════════════ */
+.cta-sec{
+  padding:120px 0 110px;text-align:center;
+  position:relative;overflow:hidden
+}
+.cta-sec::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(0,212,255,0.07),transparent 55%),
+             radial-gradient(ellipse 40% 50% at 80% 60%,rgba(139,92,246,0.05),transparent 50%)
+}
+.cta-inner{position:relative;z-index:1;max-width:920px;margin:0 auto}
+.cta-top-line{width:1px;height:100px;background:linear-gradient(180deg,transparent,rgba(0,212,255,0.35),rgba(139,92,246,0.2),transparent);margin:0 auto 60px}
+.cta-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--w30);margin-bottom:22px}
+.cta-h{
+  font-family:var(--fd);font-size:clamp(40px,6vw,80px);
+  line-height:.95;letter-spacing:.02em;text-transform:uppercase;color:var(--w);margin-bottom:24px
+}
+.cta-h .hl{background:linear-gradient(90deg,var(--cyan),#7dd3fc,var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-body{font-size:18px;font-weight:300;color:var(--w60);line-height:1.8;max-width:720px;margin:0 auto 44px}
+.cta-box{
+  display:inline-block;padding:60px;border-radius:24px;
+  border:1px solid rgba(0,212,255,0.15);
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,212,255,0.07),transparent 55%),
+             linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));
+  position:relative;overflow:hidden
+}
+.cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),rgba(139,92,246,0.3),transparent)}
+.cta-checklist{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin-bottom:36px}
+.ccl{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:400;color:var(--w60)}
+.ccl::before{content:'✓';color:var(--cyan);font-weight:700;font-size:14px}
+.btn-cta{
+  padding:18px 48px;border-radius:10px;
+  font-family:var(--fc);font-size:18px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  border:1px solid var(--cyan);
+  background:linear-gradient(135deg,rgba(0,212,255,0.22),rgba(139,92,246,0.16));
+  color:#fff;cursor:none;transition:.3s;
+  box-shadow:0 0 0 1px rgba(0,212,255,0.1),0 12px 60px rgba(0,212,255,0.2),inset 0 1px 0 rgba(255,255,255,0.08)
+}
+.btn-cta:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 0 1px rgba(0,212,255,0.25),0 20px 80px rgba(0,212,255,0.3),inset 0 1px 0 rgba(255,255,255,0.1)
+}
+.cta-note{margin-top:20px;font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--w30)}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════ */
+footer{
+  padding:40px 0;border-top:1px solid rgba(255,255,255,0.05);
+  background:var(--black)
+}
+.footer-i{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-note{font-family:var(--fm);font-size:11px;letter-spacing:.05em;color:var(--w30)}
+
+/* ═══════════════════════════════════════════════════════════════
+   DIVIDERS
+═══════════════════════════════════════════════════════════════ */
+.dv{height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.06) 30%,rgba(255,255,255,0.06) 70%,transparent)}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;padding:130px 0 80px}
+  .hero-right{display:none}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .oracle-grid,.product-intro-wrap,.proof-layout{grid-template-columns:1fr}
+  .problem-split{grid-template-columns:1fr}
+  .tiles-grid{grid-template-columns:1fr 1fr}
+  .tile.wide{grid-column:auto}
+  .vis-three,.stats-four{grid-template-columns:1fr 1fr}
+  .loop-wrap{flex-direction:column}
+  .ls{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}
+  h2{font-size:clamp(38px,8vw,60px)}
+}
+@media(max-width:640px){
+  .wrap,.wrap-sm,.wrap-xs{padding:0 22px}
+  .hero-stats{grid-template-columns:1fr}
+  .tiles-grid{grid-template-columns:1fr}
+  .vis-three,.stats-four{grid-template-columns:1fr}
+  .cta-box{padding:32px 22px}
+  .nav-links{display:none}
+  .health-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-o"></div>
+
+<!-- STARFIELD -->
+<canvas id="stars"></canvas>
+
+<!-- AMBIENT -->
+<div class="amb"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></div>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════ -->
+<nav>
+  <div class="wrap nav-i">
+    <!-- AXIOM AI LOGO (SVG) -->
+    <div class="axiom-logo">
+      <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e8ecf8"/>
+            <stop offset="40%" stop-color="#c8cfe0"/>
+            <stop offset="100%" stop-color="#8b9dc3"/>
+          </linearGradient>
+          <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+          <linearGradient id="cyanLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="50%" stop-color="#00d4ff"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- outer triangle (silver) -->
+        <polygon points="50,4 96,86 4,86" fill="none" stroke="url(#silverGrad)" stroke-width="3.5" stroke-linejoin="round"/>
+        <!-- inner left face -->
+        <polygon points="50,4 50,52 4,86" fill="url(#silverGrad)" opacity="0.18"/>
+        <!-- inner right face -->
+        <polygon points="50,4 96,86 50,52" fill="url(#silverGrad)" opacity="0.28"/>
+        <!-- inner triangle layers (purple/blue tones) -->
+        <polygon points="50,28 75,74 25,74" fill="none" stroke="url(#purpleGrad)" stroke-width="2" opacity="0.7"/>
+        <polygon points="50,44 65,70 35,70" fill="none" stroke="#60a5fa" stroke-width="1.5" opacity="0.6"/>
+        <!-- center glow point -->
+        <circle cx="50" cy="66" r="3" fill="#00d4ff" filter="url(#glow)" opacity="0.9"/>
+        <!-- base glow line -->
+        <line x1="10" y1="88" x2="90" y2="88" stroke="url(#cyanLine)" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+      <div class="axiom-wordmark">
+        <div class="wm-name">Axiom AI</div>
+        <div class="wm-tag">Intelligence Layers. Revenue Autonomy.</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="document.getElementById('oracle').scrollIntoView({behavior:'smooth'})">Oracle Engine</span>
+      <span class="nav-link" onclick="document.getElementById('howitworks').scrollIntoView({behavior:'smooth'})">How It Works</span>
+      <span class="nav-link" onclick="document.getElementById('proof').scrollIntoView({behavior:'smooth'})">Live Prototype</span>
+    </div>
+    <button class="nav-cta" onclick="window.open('https://primeflow-git-main-mindblastmarketing-1527s-projects.vercel.app/','_blank')">Enter Prototype →</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap" style="display:contents">
+    <div class="wrap hero" style="padding-top:0;padding-bottom:0;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;min-height:0">
+
+      <!-- LEFT -->
+      <div class="hero-left" style="padding-left:44px">
+        <div class="hero-intro-tag"><span class="live-pip"></span>Autonomous Ecommerce Recovery Infrastructure</div>
+        <h1 class="hero-h">
+          The AI<br/>intelligence engine<br/>
+          <span class="hl">that identifies<br/>lost revenue</span>
+        </h1>
+        <p class="hero-sub">It monitors customer health in real time, detects revenue leakage, and launches the right recovery path before more value slips away.</p>
+        <p class="hero-hook">Most ecom brands don't have a traffic problem.<br/><span>They have a customer retention problem.</span></p>
+        <div class="hero-ctas">
+          <button class="btn-p" onclick="window.open('https://primeflow-git-main-mindblastmarketing-1527s-projects.vercel.app/','_blank')">Enter Live Prototype →</button>
+          <button class="btn-g" onclick="document.getElementById('oracle').scrollIntoView({behavior:'smooth'})">Explore The System</button>
+        </div>
+      </div>
+
+      <!-- RIGHT — ENGINE VISUAL -->
+      <div class="hero-right">
+        <div class="engine-visual">
+          <div class="ev-ring"></div>
+          <div class="ev-ring"></div>
+          <div class="ev-ring"></div>
+          <div class="ev-ring"></div>
+          <!-- Nodes -->
+          <div class="ev-node" style="background:var(--cyan);box-shadow:0 0 14px var(--cyan);top:2%;left:47%"></div>
+          <div class="ev-node" style="background:var(--purple2);box-shadow:0 0 14px var(--purple2);top:47%;right:2%"></div>
+          <div class="ev-node" style="background:var(--cyan);box-shadow:0 0 10px var(--cyan);bottom:4%;left:44%"></div>
+          <div class="ev-node" style="background:var(--purple2);box-shadow:0 0 10px var(--purple2);top:44%;left:2%"></div>
+          <!-- Labels -->
+          <div class="ev-label" style="top:5%;left:20%">Detect</div>
+          <div class="ev-label" style="right:8%;top:35%">Score</div>
+          <div class="ev-label" style="bottom:7%;right:22%">Recover</div>
+          <div class="ev-label" style="left:8%;top:60%">Classify</div>
+          <!-- Core -->
+          <div class="ev-core">
+            <div class="ev-core-text">Oracle<br/>Engine</div>
+          </div>
+          <!-- Canvas for data lines -->
+          <canvas class="ev-canvas" id="engineCanvas" width="460" height="460"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAT STRIP — full width inside hero grid -->
+  <div style="grid-column:1/-1;padding:0 44px">
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-n">7–23%</div><div class="hs-l">Average Revenue Recovered</div></div>
+      <div class="hs"><div class="hs-n">24/7</div><div class="hs-l">Autonomous AI Monitoring</div></div>
+      <div class="hs"><div class="hs-n">6</div><div class="hs-l">Customer Recovery States</div></div>
+      <div class="hs"><div class="hs-n">&lt;30d</div><div class="hs-l">Typical Time to First Recovery</div></div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="sc-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     PROBLEM
+════════════════════════════════════════════ -->
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-label">The problem</div>
+      <h2>Revenue leaks<br/><span class="hl">quietly.</span></h2>
+      <p class="body-l">Revenue usually doesn't disappear in one big dramatic moment. It leaks quietly. A customer adds to cart and vanishes. A repeat buyer slowly goes cold. A high-value customer stops responding. A payment fails and no one follows up. A loyal segment starts drifting and nobody notices until the month-end numbers land softer than they should.</p>
+    </div>
+    <div class="problem-split rv">
+      <div class="ps-half bad">
+        <span class="ps-tag t-bad">The old model</span>
+        <h3>Nothing is<br/>watching.</h3>
+        <p class="body-m">That is where most brands lose money. Not because demand disappears. Not because the market suddenly turns against them. But because nothing is watching the customer base closely enough to know who needs attention, why they are slipping, and what should happen next.</p>
+        <div class="leak-list" style="margin-top:20px">
+          <div class="li li-bad"><span class="ld r"></span>Most software still points at the problem — very little actually starts fixing it</div>
+          <div class="li li-bad"><span class="ld r"></span>CRMs store contacts. Email tools fire generic flows. Dashboards display the past</div>
+          <div class="li li-bad"><span class="ld r"></span>Operators left guessing who matters most and what action should happen next</div>
+          <div class="li li-bad"><span class="ld r"></span>Silent revenue loss at scale — no system continuously watching or acting</div>
+        </div>
+      </div>
+      <div class="ps-half good">
+        <span class="ps-tag t-good">The new model</span>
+        <h3>Autonomous recovery<br/>at every layer.</h3>
+        <p class="body-m">That is the shift AXIOM AI is being built for. An autonomous revenue recovery engine designed to monitor customer health in real time, detect revenue leakage signals, classify buyer state, trigger the right recovery workflow, and begin one-to-one AI-led recovery before more value — and profit — slips away.</p>
+        <div class="leak-list" style="margin-top:20px">
+          <div class="li li-good"><span class="ld c"></span>Real-time customer health monitoring across every account, continuously</div>
+          <div class="li li-good"><span class="ld c"></span>State-specific recovery logic, not generic sequences — the right path for every customer</div>
+          <div class="li li-good"><span class="ld c"></span>AI-led one-to-one recovery conversations that begin automatically</div>
+          <div class="li li-good"><span class="ld c"></span>Operator intelligence and full visibility with override capability at any point</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     TENSION / SHIFT
+════════════════════════════════════════════ -->
+<section class="sec sec-deep">
+  <div class="wrap-xs">
+    <div class="tension-block rv">
+      <div class="sec-label" style="text-align:center">The shift</div>
+      <div class="tension-quote">Not another CRM.<br/>Not another dashboard.<br/>A new operating layer.</div>
+      <div class="t-divider"></div>
+      <div class="tension-prose">
+        <p>AXIOM AI is not another CRM. Not another dashboard. Not another static email tool pretending to be revolutionary.</p>
+        <p>It is <span class="emphasis">a new operating layer for retention, reactivation, and revenue recovery.</span></p>
+        <p>The brands that win the next era of ecommerce will not simply drive more traffic. They will build autonomous intelligence behind the click. They will know which customers are cooling off. Which buyers need a different message. Which segment is worth urgent attention. Which recovery path is most likely to convert.</p>
+        <p>And increasingly, those decisions will not be made manually. <span class="emphasis">They will be made by intelligent engines and AI agents that are actually paying attention.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     PRODUCT INTRO
+════════════════════════════════════════════ -->
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="product-intro-wrap">
+      <div class="rvl">
+        <div class="sec-label purple">The product</div>
+        <h2>An autonomous<br/>recovery<br/><span class="hlp">engine.</span></h2>
+        <p class="body-m" style="margin-top:16px;margin-bottom:24px">AXIOM AI is an autonomous revenue recovery engine for ecommerce founders. It is designed to monitor customer health in real time, detect revenue leakage signals, classify buyer state, and trigger the right recovery workflow.</p>
+        <div class="product-not-list">
+          <div class="pnl-item">Not another CRM</div>
+          <div class="pnl-item">Not another dashboard</div>
+          <div class="pnl-item">Not another static email tool</div>
+        </div>
+        <div class="product-is">
+          <div class="pi-strong">A new operating layer for ecommerce</div>
+          <div class="pi-body">Retention, reactivation, and revenue recovery — running autonomously in the background while the brand focuses on growth. The bigger opportunity is not another retention tool squeezed into an already crowded stack. It is autonomous recovery infrastructure.</div>
+        </div>
+      </div>
+      <div class="rvr">
+        <!-- UI MOCKUP -->
+        <div class="ui-mockup">
+          <div class="ui-bar">
+            <div class="ui-dot" style="background:#ff5f57"></div>
+            <div class="ui-dot" style="background:#febc2e"></div>
+            <div class="ui-dot" style="background:#28c840"></div>
+            <span class="ui-title">AXIOM AI — Operator Dashboard</span>
+          </div>
+          <div class="ui-body">
+            <div class="ui-kpi-row">
+              <div class="ui-kpi"><div class="uk-l">At-Risk Revenue</div><div class="uk-v c">$38,420</div></div>
+              <div class="ui-kpi"><div class="uk-l">Recovered / Mo</div><div class="uk-v g">$9,180</div></div>
+              <div class="ui-kpi"><div class="uk-l">Active Workflows</div><div class="uk-v p">12</div></div>
+            </div>
+            <div class="ui-chart">
+              <div class="ui-ch">Recovery performance — 30 days</div>
+              <canvas id="rcChart" height="120"></canvas>
+            </div>
+            <div class="ui-ch" style="padding:0 0 10px">Active recovery workflows</div>
+            <div class="wf-rows">
+              <div class="wfr"><div class="wfr-l"><div class="wfr-dot" style="background:var(--amber)"></div><div><div class="wfr-name">Abandoned Cart Recovery</div><div class="wfr-sub">Email + SMS · High-intent buyers</div></div></div><span class="badge bc">Active</span></div>
+              <div class="wfr"><div class="wfr-l"><div class="wfr-dot" style="background:var(--red)"></div><div><div class="wfr-name">Dormant Buyer Win-Back</div><div class="wfr-sub">AI conversation · 90d+ lapse</div></div></div><span class="badge br">Priority</span></div>
+              <div class="wfr"><div class="wfr-l"><div class="wfr-dot" style="background:var(--cyan)"></div><div><div class="wfr-name">VIP At-Risk Retention</div><div class="wfr-sub">High-LTV · Concierge tone</div></div></div><span class="badge bg">Live</span></div>
+              <div class="wfr"><div class="wfr-l"><div class="wfr-dot" style="background:var(--purple2)"></div><div><div class="wfr-name">Failed Payment Recovery</div><div class="wfr-sub">Smart retry · Billing update</div></div></div><span class="badge ba">Urgent</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     ORACLE ENGINE
+════════════════════════════════════════════ -->
+<section class="oracle-sec" id="oracle">
+  <div class="wrap">
+    <div class="oracle-grid">
+      <div class="rvl">
+        <div class="sec-label purple">Unique mechanism</div>
+        <div class="oracle-title">The <span class="hlp">Oracle</span><br/>Intelligence<br/>Engine</div>
+        <p class="body-m" style="max-width:480px">At the core of AXIOM AI is The Oracle Intelligence Engine — the intelligence layer that turns customer drift into commercial action. It is built to do what your best operator would do — only continuously, intelligently, and without needing to be dragged into every tiny decision.</p>
+        <div class="oracle-powers">
+          <div class="op"><span class="op-n">01</span><span class="op-t"><strong>Detects when a customer is slipping</strong> — monitors recency, engagement, and purchase patterns to identify drift before it becomes departure</span></div>
+          <div class="op"><span class="op-n">02</span><span class="op-t"><strong>Understands the likely reason</strong> — classifies urgency and opportunity based on customer behaviour and lifecycle signals</span></div>
+          <div class="op"><span class="op-n">03</span><span class="op-t"><strong>Chooses the right recovery path</strong> — selects workflow, message strategy, timing, and tone based on customer state and brand context</span></div>
+          <div class="op"><span class="op-n">04</span><span class="op-t"><strong>Supports the next move automatically</strong> — initiates AI-led recovery conversations without waiting for a human to act</span></div>
+          <div class="op"><span class="op-n">05</span><span class="op-t"><strong>Tracks what happens next</strong> — measures outcomes, recovered revenue, and workflow performance in real time</span></div>
+        </div>
+      </div>
+      <div class="rvr">
+        <div class="oracle-diagram">
+          <div class="od-label">Oracle Intelligence Engine — Active</div>
+          <div class="od-orbit">
+            <div class="od-ring"></div>
+            <div class="od-ring"></div>
+            <div class="od-ring"></div>
+            <!-- Core -->
+            <div class="od-core"><div class="od-core-inner">Oracle<br/>Core</div></div>
+            <!-- Nodes on rings -->
+            <div class="od-node" style="top:4%;left:50%;margin-left:-5px"></div>
+            <div class="od-node purple" style="right:4%;top:50%;margin-top:-5px"></div>
+            <div class="od-node" style="bottom:4%;left:48%"></div>
+            <div class="od-node purple" style="left:4%;top:48%"></div>
+            <!-- Labels -->
+            <div class="od-node-label" style="top:0%;left:56%;color:rgba(0,212,255,0.6);font-size:9px">Detect</div>
+            <div class="od-node-label" style="right:0%;top:42%;color:rgba(167,139,250,0.6);font-size:9px">Score</div>
+            <div class="od-node-label" style="bottom:0%;left:54%;color:rgba(0,212,255,0.6);font-size:9px">Recover</div>
+            <div class="od-node-label" style="left:0%;top:42%;color:rgba(167,139,250,0.6);font-size:9px">Classify</div>
+          </div>
+          <div class="od-stats">
+            <div class="od-stat"><div class="od-stat-n">1,031</div><div class="od-stat-l">Scored</div></div>
+            <div class="od-stat"><div class="od-stat-n">6</div><div class="od-stat-l">States</div></div>
+            <div class="od-stat"><div class="od-stat-n">24/7</div><div class="od-stat-l">Continuous</div></div>
+          </div>
+          <div class="od-latest">
+            <div class="od-lt-label">Latest Oracle Action</div>
+            <div class="od-lt-text">Customer #8842 classified as <span style="color:#ff7a8e;font-weight:500">Dormant Buyer</span> — 94 day lapse, high-LTV account. Recovery conversation initiated via AI layer.</div>
+          </div>
+          <div style="margin-top:14px;padding:14px 16px;border-radius:10px;border:1px solid rgba(0,212,255,0.1);background:rgba(0,212,255,0.03)">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,212,255,0.5);margin-bottom:6px">Oracle Insight</div>
+            <div style="font-size:13px;font-weight:300;color:var(--w60);line-height:1.55">This is not just automation. It is recovery and retention intelligence. It does what your best operator would do — only continuously, intelligently, without needing to be managed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     OPERATOR LOOP
+════════════════════════════════════════════ -->
+<section class="sec" id="howitworks">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:720px;margin:0 auto">
+      <div class="sec-label">How it works</div>
+      <h2>The Operator<br/><span class="hl">Loop</span></h2>
+      <p class="body-m" style="margin-top:16px">It takes in customer, purchase, engagement, and lifecycle signals. It scores risk and opportunity. It classifies the customer state. It activates the right recovery logic. And it tracks what happens next. That is the difference.</p>
+    </div>
+    <div class="loop-wrap rv">
+      <div class="ls">
+        <div class="ls-n">Step 01</div>
+        <div class="ls-t">Ingest</div>
+        <div class="ls-p">Pulls in customer data, purchase history, engagement signals, and lifecycle events from the connected Shopify store.</div>
+        <div class="ls-arrow"></div>
+      </div>
+      <div class="ls">
+        <div class="ls-n">Step 02</div>
+        <div class="ls-t">Score</div>
+        <div class="ls-p">Oracle Intelligence Engine scores risk and opportunity — health score, urgency rating, and recovery potential for every customer.</div>
+        <div class="ls-arrow"></div>
+      </div>
+      <div class="ls">
+        <div class="ls-n">Step 03</div>
+        <div class="ls-t">Classify</div>
+        <div class="ls-p">Each customer is assigned a precise state — Abandoned Cart, Dormant Buyer, Failed Payment, Repeat At-Risk, Replenishment Ready, or Engaged Unconverted.</div>
+        <div class="ls-arrow"></div>
+      </div>
+      <div class="ls">
+        <div class="ls-n">Step 04</div>
+        <div class="ls-t">Recover</div>
+        <div class="ls-p">The right workflow triggers. AI-led recovery conversations begin. Personalised, state-specific, brand-intelligent outreach — executed autonomously.</div>
+        <div class="ls-arrow"></div>
+      </div>
+      <div class="ls">
+        <div class="ls-n">Step 05</div>
+        <div class="ls-t">Track</div>
+        <div class="ls-p">Every action and outcome measured. Recovered revenue, workflow performance, and customer health trends reported in real time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     CAPABILITY TILES
+════════════════════════════════════════════ -->
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:680px;margin:0 auto">
+      <div class="sec-label">Capabilities</div>
+      <h2>Autonomous.<br/><span class="hl">Intelligent.</span> Relentless.</h2>
+      <p class="body-m" style="margin-top:16px">The result feels less like software — and more like an autonomous revenue operator. Here is what that looks like inside the product.</p>
+    </div>
+    <div class="tiles-grid rv">
+      <div class="tile">
+        <span class="tile-icon">⚡</span>
+        <div class="tile-t">Customer Health Intelligence</div>
+        <div class="tile-b">Full customer health scoring with red / yellow / green classification across six distinct recovery states. Every account scored continuously — not just on demand.</div>
+        <div class="tile-status">Live in prototype</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">⚙️</span>
+        <div class="tile-t">Recovery Workflow Engine</div>
+        <div class="tile-b">Abandoned cart, failed payment, dormant buyer, replenishment, VIP retention, engaged unconverted — each with its own state-specific recovery logic and messaging.</div>
+        <div class="tile-status">Live in prototype</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">🤖</span>
+        <div class="tile-t">AI Recovery Conversations</div>
+        <div class="tile-b">One-to-one AI-led recovery at scale. The system initiates, continues, and adapts conversations with individual customers — with operator override at any point.</div>
+        <div class="tile-status">Live in prototype</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">📊</span>
+        <div class="tile-t">Analytics & Revenue Tracking</div>
+        <div class="tile-b">Recovery performance dashboard tracking recovered revenue, workflow effectiveness, customer health trends, and active conversation outcomes in real time.</div>
+        <div class="tile-status">Live in prototype</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">🎯</span>
+        <div class="tile-t">AI Strategy Layer</div>
+        <div class="tile-b">Workflow-specific AI strategy generation. The system crafts recovery logic specific to each customer state and commercial objective — not generic prompts.</div>
+        <div class="tile-status">Live in prototype</div>
+      </div>
+      <div class="tile" style="border-color:rgba(139,92,246,0.15);background:linear-gradient(160deg,rgba(139,92,246,0.05),transparent)">
+        <span class="tile-icon">🔮</span>
+        <div class="tile-t">Brand Knowledge Vault</div>
+        <div class="tile-b">The AI inherits deep brand intelligence — tone, product context, customer rules, and communication guidance. Every conversation feels like it came from the brand, not a bot.</div>
+        <div class="tile-status" style="color:var(--purple2)">Coming next</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     VISION / FUTURE
+════════════════════════════════════════════ -->
+<section class="vision-sec">
+  <div class="wrap">
+    <div class="vis-content rv">
+      <div class="sec-label" style="text-align:center">The future</div>
+      <div class="vis-line"></div>
+      <div class="vis-big">The brands that win<br/><span class="hl">don't just acquire.</span><br/>They recover.</div>
+      <p class="body-l" style="margin:0 auto 0;text-align:center">The bigger opportunity is not another retention tool squeezed into an already crowded stack. It is autonomous recovery infrastructure working quietly in the background while the brand focuses on growth.</p>
+      <div class="vis-three">
+        <div class="vt">
+          <div class="vt-from">Moving away from</div>
+          <div class="vt-t">More Dashboards</div>
+          <div class="vt-sub">Reports that show you the problem but don't act on it</div>
+          <div style="margin:16px 0 6px;border-top:1px solid rgba(255,255,255,0.06)"></div>
+          <div class="vt-to">Moving toward</div>
+          <div class="vt-t" style="color:var(--cyan)">Autonomous Recovery</div>
+          <div class="vt-sub">Intelligence that detects, decides, and acts automatically</div>
+        </div>
+        <div class="vt">
+          <div class="vt-from">Moving away from</div>
+          <div class="vt-t">Manual Follow-Up</div>
+          <div class="vt-sub">Operators guessing who needs attention and when</div>
+          <div style="margin:16px 0 6px;border-top:1px solid rgba(255,255,255,0.06)"></div>
+          <div class="vt-to">Moving toward</div>
+          <div class="vt-t" style="color:var(--cyan)">Recovery Loops</div>
+          <div class="vt-sub">Autonomous workflows running continuously without human triggers</div>
+        </div>
+        <div class="vt">
+          <div class="vt-from">Moving away from</div>
+          <div class="vt-t">Generic Blasts</div>
+          <div class="vt-sub">Batch messaging that doesn't know who it's talking to</div>
+          <div style="margin:16px 0 6px;border-top:1px solid rgba(255,255,255,0.06)"></div>
+          <div class="vt-to">Moving toward</div>
+          <div class="vt-t" style="color:var(--cyan)">1-to-1 AI Recovery</div>
+          <div class="vt-sub">Personalised AI-led recovery conversations at the individual customer level</div>
+        </div>
+      </div>
+      <p class="body-l" style="text-align:center;margin-top:0;color:rgba(0,212,255,0.8);font-size:17px">That future is already beginning to take shape inside AXIOM AI.</p>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     LIVE PROTOTYPE / PROOF
+════════════════════════════════════════════ -->
+<section class="sec sec-deep" id="proof">
+  <div class="wrap">
+    <div class="proof-layout">
+      <div class="rvl">
+        <div class="sec-label">What exists now</div>
+        <h2>A live prototype.<br/><span class="hl">A working system.</span></h2>
+        <p class="body-m" style="margin-top:16px;margin-bottom:28px">The live prototype already demonstrates the key logic. That matters because the product is no longer theoretical. You can already see what happens when customer health intelligence, workflow automation, and AI-led recovery logic begin converging into one operating layer.</p>
+        <div class="proof-bullets">
+          <div class="pb"><span class="pb-dot"></span>Customer intelligence dashboards and health scoring</div>
+          <div class="pb"><span class="pb-dot"></span>State classification across six recovery segments</div>
+          <div class="pb"><span class="pb-dot"></span>Recovery workflows with AI message strategy</div>
+          <div class="pb"><span class="pb-dot"></span>Customer-level drill-down and individual profiles</div>
+          <div class="pb"><span class="pb-dot"></span>One-to-one AI-led recovery conversations</div>
+          <div class="pb"><span class="pb-dot"></span>Analytics visibility and revenue tracking</div>
+          <div class="pb"><span class="pb-dot"></span>Deeper brand knowledge layers (in development)</div>
+        </div>
+      </div>
+      <div class="rvr">
+        <!-- SCREENSHOT PANEL -->
+        <div class="screenshot-panel">
+          <div class="sp-bar">
+            <div class="ui-dot" style="background:#ff5f57"></div>
+            <div class="ui-dot" style="background:#febc2e"></div>
+            <div class="ui-dot" style="background:#28c840"></div>
+            <span class="ui-title">AXIOM AI — Customer Intelligence View</span>
+          </div>
+          <div class="sp-body">
+            <div class="health-grid">
+              <div class="hg-card"><div class="hg-l">At-Risk Revenue</div><div class="hg-v" style="color:var(--cyan);text-shadow:0 0 20px rgba(0,212,255,0.35)">$38,420</div><div class="hg-sub">Across all states</div></div>
+              <div class="hg-card"><div class="hg-l">Recovered / Month</div><div class="hg-v" style="color:var(--green);text-shadow:0 0 20px rgba(0,229,170,0.3)">$9,180</div><div class="hg-sub">AI-led outreach</div></div>
+              <div class="hg-card"><div class="hg-l">Critical Accounts</div><div class="hg-v" style="color:#ff7a8e;text-shadow:0 0 20px rgba(255,58,92,0.3)">223</div><div class="hg-sub">Immediate action</div></div>
+              <div class="hg-card"><div class="hg-l">Active Workflows</div><div class="hg-v" style="color:var(--purple2);text-shadow:0 0 20px rgba(167,139,250,0.3)">12</div><div class="hg-sub">Running now</div></div>
+            </div>
+            <div style="padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.015);margin-bottom:12px">
+              <div class="ui-ch" style="margin-bottom:12px">Customer health distribution</div>
+              <div class="health-bars" id="hbars">
+                <div class="hb"><div class="hb-top"><span class="hb-name">Abandoned Cart</span><span class="hb-val" style="color:var(--amber)">247</span></div><div class="hb-track"><div class="hb-fill" style="width:0%;background:var(--amber)" data-w="82%"></div></div></div>
+                <div class="hb"><div class="hb-top"><span class="hb-name">Dormant Buyer</span><span class="hb-val" style="color:var(--red)">134</span></div><div class="hb-track"><div class="hb-fill" style="width:0%;background:var(--red)" data-w="44%"></div></div></div>
+                <div class="hb"><div class="hb-top"><span class="hb-name">Failed Payment</span><span class="hb-val" style="color:var(--red)">89</span></div><div class="hb-track"><div class="hb-fill" style="width:0%;background:var(--red)" data-w="30%"></div></div></div>
+                <div class="hb"><div class="hb-top"><span class="hb-name">Replenishment Ready</span><span class="hb-val" style="color:var(--cyan)">198</span></div><div class="hb-track"><div class="hb-fill" style="width:0%;background:var(--cyan)" data-w="66%"></div></div></div>
+                <div class="hb"><div class="hb-top"><span class="hb-name">Engaged Unconverted</span><span class="hb-val" style="color:var(--green)">301</span></div><div class="hb-track"><div class="hb-fill" style="width:0%;background:var(--green)" data-w="100%"></div></div></div>
+              </div>
+            </div>
+            <div style="padding:12px 14px;border-radius:10px;border:1px solid rgba(139,92,246,0.15);background:rgba(139,92,246,0.04)">
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(139,92,246,0.5);margin-bottom:5px">Oracle Status</div>
+              <div style="font-size:12px;font-weight:300;color:var(--w60)">Monitoring 1,031 customers · 3 high-priority recovery actions pending · AI conversations active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     WHO IT'S FOR
+════════════════════════════════════════════ -->
+<section class="sec sec-alt">
+  <div class="wrap rv">
+    <div style="text-align:center;max-width:760px;margin:0 auto 0">
+      <div class="sec-label">Who it's for</div>
+      <h2>Built for serious<br/><span class="hl">ecommerce operators.</span></h2>
+      <p class="body-l" style="margin:16px auto 0;text-align:center">Built for ecommerce founders doing enough volume to know that more ad spend is not always the answer, AXIOM AI is aimed at the growth hiding inside the customer base itself. For founders and operators in roughly the $20k to $500k per month range — the deeper problem is rarely just more people at the top of the funnel.</p>
+    </div>
+    <div class="stats-four rv">
+      <div class="sf"><div class="sf-n">$20K</div><div class="sf-l">Minimum monthly Shopify volume for meaningful customer recovery intelligence</div></div>
+      <div class="sf"><div class="sf-n">$500K</div><div class="sf-l">Upper range — brands at this level have the data to make Oracle extremely powerful</div></div>
+      <div class="sf"><div class="sf-n">69%</div><div class="sf-l">Of shopping carts are abandoned — the majority never recovered</div></div>
+      <div class="sf"><div class="sf-n">5–25×</div><div class="sf-l">More expensive to acquire a new customer than recover an existing one</div></div>
+    </div>
+    <div class="rv" style="margin-top:20px;padding:28px 36px;border-radius:16px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02)">
+      <p class="body-m" style="text-align:center;max-width:860px;margin:0 auto">Too much value is already leaking out of the middle, the bottom, and the edges of the customer journey. Abandoned carts. Dormant buyers. Failed payments. Cooling VIPs. Missed replenishment windows. Unconverted high-intent traffic. Segments that could have been recovered if the right intelligence was paying attention early enough. <span style="color:var(--cyan)">AXIOM AI is being built so that intelligence exists.</span></p>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- ════════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════════ -->
+<section class="cta-sec">
+  <div class="wrap">
+    <div class="cta-inner rv">
+      <div class="cta-top-line"></div>
+      <div class="cta-eyebrow">Experience the future of ecommerce growth</div>
+      <div class="cta-h">
+        Intelligence that<br/>
+        <span class="hl">detects, decides,<br/>and acts.</span>
+      </div>
+      <p class="cta-body">AXIOM AI is still early, but the shape of that future is already visible. If you're a founder, operator, strategic partner, or investor looking at where ecommerce infrastructure is going next, this is the kind of engine worth paying attention to. Because the future belongs to brands that do not just acquire customers — but know how to keep them, recover them, and reactivate them before profits disappear.</p>
+      <div class="cta-box rv">
+        <div class="cta-checklist">
+          <div class="ccl">Performance-Based Model</div>
+          <div class="ccl">No Generic Dashboards</div>
+          <div class="ccl">Autonomous AI Recovery</div>
+          <div class="ccl">One-to-One Intelligence</div>
+        </div>
+        <button class="btn-cta" onclick="window.open('https://primeflow-git-main-mindblastmarketing-1527s-projects.vercel.app/','_blank')">Enter the AXIOM AI Prototype →</button>
+        <div class="cta-note">Early stage · Partner & investor interest welcome · Built by AXIOM AI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <div class="wrap footer-i">
+    <div class="axiom-logo">
+      <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8ecf8"/><stop offset="40%" stop-color="#c8cfe0"/><stop offset="100%" stop-color="#8b9dc3"/></linearGradient>
+          <linearGradient id="pg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+          <linearGradient id="cl2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="transparent"/></linearGradient>
+          <filter id="g2"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <polygon points="50,4 96,86 4,86" fill="none" stroke="url(#sg2)" stroke-width="3.5" stroke-linejoin="round"/>
+        <polygon points="50,4 50,52 4,86" fill="url(#sg2)" opacity="0.18"/>
+        <polygon points="50,4 96,86 50,52" fill="url(#sg2)" opacity="0.28"/>
+        <polygon points="50,28 75,74 25,74" fill="none" stroke="url(#pg2)" stroke-width="2" opacity="0.7"/>
+        <polygon points="50,44 65,70 35,70" fill="none" stroke="#60a5fa" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="50" cy="66" r="3" fill="#00d4ff" filter="url(#g2)" opacity="0.9"/>
+        <line x1="10" y1="88" x2="90" y2="88" stroke="url(#cl2)" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+      <div class="axiom-wordmark">
+        <div class="wm-name" style="font-size:17px">Axiom AI</div>
+        <div class="wm-tag">Intelligence Layers. Revenue Autonomy.</div>
+      </div>
+    </div>
+    <div class="footer-note">© 2025 AXIOM AI · Autonomous ecommerce recovery infrastructure · Early stage</div>
+  </div>
+</footer>
+
+</div><!-- .page -->
+
+<script>
+/* ── CURSOR ─────────────────────────────────────────────── */
+const cur=document.getElementById('cur'),curo=document.getElementById('cur-o')
+let mx=0,my=0
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY
+  cur.style.left=mx+'px';cur.style.top=my+'px'
+  curo.style.left=mx+'px';curo.style.top=my+'px'
+})
+document.querySelectorAll('button,[onclick],.nav-link,.tile,.op,.wfr,.pb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='12px';cur.style.height='12px'
+    curo.style.width='44px';curo.style.height='44px'
+    curo.style.borderColor='rgba(0,212,255,0.6)'
+  })
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='7px';cur.style.height='7px'
+    curo.style.width='28px';curo.style.height='28px'
+    curo.style.borderColor='rgba(0,212,255,0.35)'
+  })
+})
+
+/* ── STARFIELD ──────────────────────────────────────────── */
+const sc=document.getElementById('stars')
+sc.width=window.innerWidth;sc.height=window.innerHeight
+const sx=sc.getContext('2d')
+const stars=Array.from({length:180},()=>({
+  x:Math.random()*sc.width,y:Math.random()*sc.height,
+  r:Math.random()*.8+.2,o:Math.random()*.6+.1,
+  s:Math.random()*.3+.05
+}))
+function drawStars(){
+  sx.clearRect(0,0,sc.width,sc.height)
+  stars.forEach(s=>{
+    s.o+=s.s*(Math.random()>.5?1:-1)
+    s.o=Math.max(.05,Math.min(.8,s.o))
+    sx.beginPath();sx.arc(s.x,s.y,s.r,0,Math.PI*2)
+    sx.fillStyle=`rgba(255,255,255,${s.o})`;sx.fill()
+  })
+  requestAnimationFrame(drawStars)
+}
+drawStars()
+window.addEventListener('resize',()=>{sc.width=window.innerWidth;sc.height=window.innerHeight})
+
+/* ── ENGINE CANVAS ─────────────────────────────────────── */
+const ec=document.getElementById('engineCanvas')
+if(ec){
+  const ex=ec.getContext('2d')
+  const particles=Array.from({length:40},()=>({
+    angle:Math.random()*Math.PI*2,
+    radius:60+Math.random()*140,
+    speed:(Math.random()*.002+.001)*(Math.random()>.5?1:-1),
+    size:Math.random()*1.5+.5,
+    alpha:Math.random()*.5+.1,
+    color:Math.random()>.5?'0,212,255':'139,92,246'
+  }))
+  function drawEngine(){
+    ex.clearRect(0,0,460,460)
+    const cx=230,cy=230
+    particles.forEach(p=>{
+      p.angle+=p.speed
+      const x=cx+Math.cos(p.angle)*p.radius
+      const y=cy+Math.sin(p.angle)*p.radius
+      ex.beginPath();ex.arc(x,y,p.size,0,Math.PI*2)
+      ex.fillStyle=`rgba(${p.color},${p.alpha})`;ex.fill()
+      // trail
+      ex.beginPath()
+      ex.arc(cx+Math.cos(p.angle-.05)*p.radius,cy+Math.sin(p.angle-.05)*p.radius,p.size*.5,0,Math.PI*2)
+      ex.fillStyle=`rgba(${p.color},${p.alpha*.4})`;ex.fill()
+    })
+    requestAnimationFrame(drawEngine)
+  }
+  drawEngine()
+}
+
+/* ── RECOVERY CHART ────────────────────────────────────── */
+const rcc=document.getElementById('rcChart')
+if(rcc){
+  const rctx=rcc.getContext('2d')
+  const g1=rctx.createLinearGradient(0,0,0,120)
+  g1.addColorStop(0,'rgba(0,229,170,0.15)');g1.addColorStop(1,'rgba(0,229,170,0)')
+  const g2=rctx.createLinearGradient(0,0,0,120)
+  g2.addColorStop(0,'rgba(255,58,92,0.1)');g2.addColorStop(1,'rgba(255,58,92,0)')
+  new Chart(rctx,{
+    type:'line',
+    data:{
+      labels:['Apr 4','Apr 8','Apr 12','Apr 16','Apr 20','Apr 24','Apr 28','May 2'],
+      datasets:[
+        {label:'Recovered',data:[1100,1700,1500,2300,2000,2800,3300,3000],borderColor:'#00e5aa',backgroundColor:g1,fill:true,tension:.45,pointRadius:2,pointBackgroundColor:'#00e5aa',borderWidth:1.5},
+        {label:'At-Risk',data:[9800,9200,8900,8100,7600,7200,6500,6100],borderColor:'rgba(255,58,92,0.4)',backgroundColor:g2,fill:true,tension:.45,pointRadius:0,borderWidth:1.2,borderDash:[4,4]}
+      ]
+    },
+    options:{
+      responsive:true,plugins:{
+        legend:{labels:{color:'rgba(255,255,255,0.3)',font:{size:10,family:'DM Mono'},boxWidth:8,padding:10}},
+        tooltip:{backgroundColor:'#0c0f1c',borderColor:'rgba(255,255,255,0.07)',borderWidth:1,titleColor:'rgba(255,255,255,0.6)',bodyColor:'rgba(255,255,255,0.45)',callbacks:{label:c=>' $'+c.raw.toLocaleString()}}
+      },
+      scales:{
+        x:{ticks:{color:'rgba(255,255,255,0.22)',font:{size:9,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.03)'}},
+        y:{ticks:{color:'rgba(255,255,255,0.22)',font:{size:9,family:'DM Mono'},callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(255,255,255,0.03)'}}
+      }
+    }
+  })
+}
+
+/* ── SCROLL REVEAL ─────────────────────────────────────── */
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.08})
+document.querySelectorAll('.rv,.rvl,.rvr').forEach(el=>ro.observe(el))
+setTimeout(()=>{
+  document.querySelectorAll('.rv,.rvl,.rvr').forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('on')
+  })
+},80)
+
+/* ── HEALTH BARS ───────────────────────────────────────── */
+const hbo=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.hb-fill').forEach(b=>b.style.width=b.dataset.w)
+      hbo.disconnect()
+    }
+  })
+},{threshold:.3})
+const hbEl=document.getElementById('hbars')
+if(hbEl)hbo.observe(hbEl)
+
+/* ── NAV SHRINK ────────────────────────────────────────── */
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').style.padding=window.scrollY>60?'12px 0':'18px 0'
+})
+
+/* ── HERO LAYOUT FIX ───────────────────────────────────── */
+// The hero section inner grid needs proper wrapping
+const heroSection=document.querySelector('.hero')
+if(heroSection){
+  heroSection.style.display='grid'
+  heroSection.style.gridTemplateColumns='1fr 1fr'
+  heroSection.style.gridTemplateRows='1fr auto'
+  heroSection.style.alignItems='center'
+}
+</script>
+</body>
+</html>
